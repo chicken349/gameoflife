@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="index.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="canvas"></div>
+    <span id="slider">
+      <label id="slider-label" for="slider" aria-label="slider value"></label>
+    </span>
+
+    <div id="rule-control">
+      Rules: Birth:
+      <select class="rules" placeholder="0-8" aria-label="Birth start">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option selected value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+      </select>
+      -
+      <select class="rules" placeholder="0-8" aria-label="Birth end">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option selected value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+      </select>
+      Survival:
+      <select class="rules" placeholder="0-8" aria-label="Survival start">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option selected value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+      </select>
+      -
+      <select class="rules" placeholder="0-8" aria-label="Survival end">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option selected value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+      </select>
+    </div>
+    <div>
+      <p id="game-result"></p>
+    </div>
+    <div>
+      <button
+        type="button"
+        class="btn btn-outline-primary margin-btn"
+        id="reset-game"
+      >
+        Reset
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-primary margin-btn"
+        id="stop-game"
+      >
+        Pause
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-primary margin-btn"
+        id="start-game"
+      >
+        Continue
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-primary margin-btn"
+        id="manual-mode"
+      >
+        Manual Control Mode: False
+      </button>
+    </div>
+    <div class="row margin-row display-none" id="custom-style">
+      Custom Style:
+      <div class="col-xs-12 col-sm-6">
+        <input type="color" id="life-color" name="life" value="#3c74f6" />
+        <label for="life">Life</label>
+        <input type="color" id="no-life-color" name="no-life-color" value="#ffffff" />
+        <label for="no-life-color">Background</label>
+      </div>
+    </div>
+    <div class="row margin-row">
+      <div class="col-xs-12 col-sm-6">
+        <select
+          class="form-select form-select-mb-3 color-mode-select"
+          aria-label="Select Color Pattern"
+        >
+          <option disabled>Select Color Mode:</option>
+          <option selected value="normalMode">
+            Default Mode: Black & White
+          </option>
+          <option value="neighborMode">
+            Neighbor Mode: Change color when neighbor number increases
+          </option>
+          <option value="darkenMode">
+            Darken Mode: Darken (increase opacity) color when a life becomes
+            stable
+          </option>
+          <option value="customMode">
+            Custom Mode: Customize color of lives and background
+          </option>
+          <option value="randomMode">
+            Random Mode: Randomize color of lives
+          </option>
+        </select>
+      </div>
+      <div class="col-xs-12 col-sm-6">
+        <select
+          class="form-select form-select-mb-3 control-mode-select"
+          aria-label="Select Control Pattern"
+        >
+          <option disabled>Select Color Mode:</option>
+          <option selected value="mouse">
+            Default Mode: Mouse click & drag
+          </option>
+          <option value="keyboard">
+            Keyboard Mode: ARROWs control panel then ENTER
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="row margin-row">
+      <div class="col-xs-12 col-sm-6">
+        <select
+          class="form-select form-select-mb-3 mode-select"
+          aria-label="Select Mode"
+        >
+          <option disabled>Select Mode:</option>
+          <option selected value="B3S23">
+            Default Mode: B3/S23 (Conway's Game of Life)
+          </option>
+          <option value="Slither">Game Mode: Slither</option>
+          <option value="B3S012345678">
+            Special Mode: B3/S012345678 (Life without death)
+          </option>
+          <option value="B25S4">Special Mode: B25/S4</option>
+        </select>
+      </div>
+      <div class="col-xs-12 col-sm-6">
+        <select
+          class="form-select form-select-mb-3 pattern-select"
+          aria-label="Select Pattern"
+        >
+          <option value="instruction" selected>Select Special Pattern:</option>
+          <option value="glider">Pattern: Glider</option>
+          <option value="gosperGliderGun">Pattern: Gosper Glider Gun</option>
+        </select>
+      </div>
+    </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.2.0/lib/p5.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.16.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.16.0/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.16.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.16.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.16.0/firebase-database.js"></script>
+    <script src="p5GameOfLife.js"></script>
+  </body>
+</html>
