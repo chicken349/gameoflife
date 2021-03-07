@@ -38,7 +38,7 @@ function setup() {
   canvas.parent(document.querySelector('#canvas'));
   slider = createSlider(1, 30, 15);
   slider.parent(document.querySelector('#slider'))
-  slider.position(0, height - 5);
+  slider.position(15, height - 5);
   slider.style('width', '200px');
 
   /*Calculate the number of columns and rows */
@@ -116,20 +116,20 @@ function draw() {
 
     document.querySelector("#life-color").addEventListener("input", (e) => {
       let lifeColor = e.target.value.slice(1)
-      console.log(lifeColor)
+      // console.log(lifeColor)
       lifeCustomColor[0] = unhex(lifeColor.slice(0, 2))
       lifeCustomColor[1] = unhex(lifeColor.slice(2, 4))
       lifeCustomColor[2] = unhex(lifeColor.slice(4))
-      console.log(lifeCustomColor)
+      // console.log(lifeCustomColor)
     })
 
     document.querySelector("#no-life-color").addEventListener("input", (e) => {
       let noLifeColor = e.target.value.slice(1)
-      console.log(noLifeColor)
+      // console.log(noLifeColor)
       noLifeCustomColor[0] = unhex(noLifeColor.slice(0, 2))
       noLifeCustomColor[1] = unhex(noLifeColor.slice(2, 4))
       noLifeCustomColor[2] = unhex(noLifeColor.slice(4))
-      console.log(noLifeCustomColor)
+      // console.log(noLifeCustomColor)
     })
   }
 
@@ -148,7 +148,6 @@ function draw() {
         if (controlMode.color == "randomMode" || rule.initialRandomState) {
           fill(floor(random(0, 256)), floor(random(0, 256)), floor(random(0, 256)))
         } else if (controlMode.color == "normalMode") {
-          // console.log("fill")
           fill(0)
         } else if (controlMode.color == "neighborMode") {
           fill(boxColor[0], (boxColor[1] * (currentBoard[i][j].neighbors + 10)) % 255, (boxColor[2] * (currentBoard[i][j].neighbors + 100)) % 255);
@@ -158,7 +157,6 @@ function draw() {
           fill(255, 100, 0, currentBoard[i][j].surviveRound)
         } else if (controlMode.color == "customMode") {
           fill(lifeCustomColor[0], lifeCustomColor[1], lifeCustomColor[2])
-          console.log(lifeCustomColor)
         }
       } else {
         if (controlMode.color == "customMode") {
