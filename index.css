@@ -13,3 +13,13 @@
 .margin-lg {
   margin-left: 15px;
 }
+
+.display-flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#canvas {
+  margin-left: 10px;
+}

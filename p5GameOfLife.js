@@ -38,7 +38,7 @@ function setup() {
   canvas.parent(document.querySelector('#canvas'));
   slider = createSlider(1, 30, 15);
   slider.parent(document.querySelector('#slider'))
-  slider.position(15, height - 5);
+  // slider.position(15, height - 5);
   slider.style('width', '200px');
 
   /*Calculate the number of columns and rows */
