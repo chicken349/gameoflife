@@ -34,7 +34,7 @@ let rule = { birthStart: 3, birthEnd: 3, survivalStart: 2, survivalEnd: 3, prior
 function setup() {
   // location.reload();
   /* Set the canvas to be under the element #canvas*/
-  const canvas = createCanvas(windowWidth - 20, windowHeight - 220);
+  const canvas = createCanvas(windowWidth - 20, windowHeight - 280);
   canvas.parent(document.querySelector('#canvas'));
   slider = createSlider(1, 30, 15);
   slider.parent(document.querySelector('#slider'))
@@ -80,7 +80,7 @@ function init() {
 }
 
 function windowResized() {
-  resizeCanvas(windowWidth - 20, windowHeight - 220);
+  resizeCanvas(windowWidth - 20, windowHeight - 280);
   columns = floor(width / unitLength);
   rows = floor(height / unitLength);
 
