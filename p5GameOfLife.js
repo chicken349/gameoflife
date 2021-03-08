@@ -83,7 +83,6 @@ function windowResized() {
   resizeCanvas(windowWidth - 20, windowHeight - 220);
   columns = floor(width / unitLength);
   rows = floor(height / unitLength);
-  slider.position(0, height - 5);
 
   for (let i = 0; i < columns; i++) {
     currentBoard[i] = [];
