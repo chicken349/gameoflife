@@ -13,7 +13,7 @@ let filledText = document.querySelector("#game-result")
 let filledBox = 0
 let mouseClicked = {}
 let generateMode = ""
-let slitherStatus = { markCoordinates: [0, 0], scores: 0, speed: 15, direction: "right", gameOver: false, recordUpdated: false }
+let slitherStatus = { markCoordinates: [0, 0], scores: 0, speed: 15, direction: "right", gameOver: false }
 let slitherMarkGen = false
 let slitherArray = [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0]]
 let controlMode = { color: "normalMode", method: "mouse" }
@@ -309,7 +309,6 @@ function generateSlither() {
     handleGameOver()
   } else {
     setManualModeFalse()
-    slitherStatus.recordUpdated = false
   }
   nextStep()
 }
@@ -392,36 +391,10 @@ function checkGameOver() {
 }
 
 function handleGameOver() {
-  filledText.innerText = `Game Over! Your score is ${slitherStatus.scores}`
+  alert(`Game Over! Your score is ${slitherStatus.scores}`)
   startBtn.disabled = true
   stopBtn.disabled = true
   setManualModeTrue()
-
-  if (!slitherStatus.recordUpdated) {
-    let name = prompt(`Game Over! Your score is ${slitherStatus.scores}. Please enter your name`)
-    while (!name) {
-      name = prompt(`Game Over! Your score is ${slitherStatus.scores}. Please enter your name`)
-    }
-
-    const time = new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString()
-    // console.log(time);
-
-    // unsafe, should use process.env
-    firebase.initializeApp({
-      apiKey: "AIzaSyD9UIG2m7nsEk0rlDEFHoUd5X-rtTv-HpA",
-      authDomain: "fast-feedback-demo-af039.firebaseapp.com",
-      projectId: "fast-feedback-demo-af039",
-    })
-
-    const db = firebase.firestore();
-
-    db.collection("records").add({
-      player: name,
-      record: slitherStatus.scores,
-      recordTime: time,
-    })
-    slitherStatus.recordUpdated = true
-  }
 
   slitherStatus.gameOver = false
   init()
