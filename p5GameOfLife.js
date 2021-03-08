@@ -265,10 +265,6 @@ function generateB3S012345678() {
   filledText.innerText = `Mouse clicked ${mouseClickedRecords.length} boxes, ${filledBox} filled in total ${rows * columns} boxes = ${(filledBox * 100 / (rows * columns)).toFixed(2)}%`
 }
 
-function generateB3S23() {
-  ruleUpdate(3, 3, 2, 3)
-  generateCustom()
-}
 
 function generateB25S4() {
   ruleUpdate(2, 5, 4, 4)
@@ -470,6 +466,10 @@ function ruleUpdate(birthStart, birthEnd, survivalStart, survivalEnd) {
 
 function glider() {
   setManualModeFalse()
+  modeSelectBtn.selectedIndex = "1"
+  ruleUpdate(3,3,2,3)
+  generateMode = "generateB3S23"
+
   for (let x = 3; x < columns; x += 5) {
     for (let y = 3; y < rows; y += 5) {
       currentBoard[x][y].filled = 1;
@@ -479,11 +479,19 @@ function glider() {
       currentBoard[x - 1][y + 2].filled = 1;
     }
   }
-  generateB3S23()
+  generateCustom()
+}
+
+function generateB3S23() {
+  ruleUpdate(3,3,2,3)
+  generateCustom()
 }
 
 function gosperGliderGun() {
   setManualModeFalse()
+  modeSelectBtn.selectedIndex = "1"
+  ruleUpdate(3,3,2,3)
+  generateMode = "generateB3S23"
   rule.limitedBoundary = true
 
   let x = 3;
@@ -526,7 +534,7 @@ function gosperGliderGun() {
   currentBoard[x + 35][y - 2].filled = 1;
   currentBoard[x + 35][y - 1].filled = 1;
 
-  generateB3S23()
+  generateCustom()
 }
 
 function generateGosper() {
