@@ -63,17 +63,17 @@ function setup() {
 
 function init() {
   // Now both currentBoard and nextBoard are array of array of undefined values.
-  for (let i = 0; i < columns; i++) {
-    for (let j = 0; j < rows; j++) {
-      currentBoard[i][j] = { filled: 0, neighbors: 0, surviveRound: 0 };
-      nextBoard[i][j] = { filled: 0, neighbors: 0, surviveRound: 0 };
+  for (let x = 0; x < columns; x++) {
+    for (let y = 0; y < rows; y++) {
+      currentBoard[x][y] = { filled: 0, neighbors: 0, surviveRound: 0 };
+      nextBoard[x][y] = { filled: 0, neighbors: 0, surviveRound: 0 };
     }
   }
   resetStatus()
   if (generateMode == "generateSlither") {
     resetSlither()
   }
-  loop();
+  startGame()
   if (controlMode.method == "keyboard") {
     setManualModeTrue();
   }
@@ -134,26 +134,26 @@ function draw() {
 
   // console.log(generateMode)
   // console.log(columns, rows)
-  for (let i = 0; i < columns; i++) {
-    for (let j = 0; j < rows; j++) {
+  for (let x = 0; x < columns; x++) {
+    for (let y = 0; y < rows; y++) {
       if (rule.initialRandomState) {
         if (random(0, 1) > 0.9) {
-          currentBoard[i][j].filled = 1
+          currentBoard[x][y].filled = 1
         } else {
-          currentBoard[i][j].filled = 0
+          currentBoard[x][y].filled = 0
         }
       }
-      if (currentBoard[i][j].filled == 1) {
+      if (currentBoard[x][y].filled == 1) {
         if (controlMode.color == "randomMode" || rule.initialRandomState) {
           fill(floor(random(0, 256)), floor(random(0, 256)), floor(random(0, 256)))
         } else if (controlMode.color == "normalMode") {
           fill(0)
         } else if (controlMode.color == "neighborMode") {
-          fill(boxColor[0], (boxColor[1] * (currentBoard[i][j].neighbors + 10)) % 255, (boxColor[2] * (currentBoard[i][j].neighbors + 100)) % 255);
+          fill(boxColor[0], (boxColor[1] * (currentBoard[x][y].neighbors + 10)) % 255, (boxColor[2] * (currentBoard[x][y].neighbors + 100)) % 255);
           // console.log(boxColor[0], (boxColor[1] * (currentBoard[i][j].neighbors + 10)) % 255, (boxColor[2] * (currentBoard[i][j].neighbors + 100)) % 255)
         } else if (controlMode.color == "darkenMode") {
           // console.log(currentBoard[i][j].surviveRound)
-          fill(255, 100, 0, currentBoard[i][j].surviveRound)
+          fill(255, 100, 0, currentBoard[x][y].surviveRound)
         } else if (controlMode.color == "customMode") {
           fill(lifeCustomColor[0], lifeCustomColor[1], lifeCustomColor[2])
         }
@@ -165,7 +165,7 @@ function draw() {
         }
       }
       stroke(strokeColor);
-      rect(i * unitLength, j * unitLength, unitLength, unitLength);
+      rect(x * unitLength, y * unitLength, unitLength, unitLength);
     }
   }
 }
@@ -176,19 +176,19 @@ function generateCustom() {
     for (let y = 0; y < rows; y++) {
       // Count all living members in the Moore neighborhood(8 boxes surrounding)
       let neighbors = 0;
-      for (let i of [-1, 0, 1]) {
-        for (let j of [-1, 0, 1]) {
+      for (let dx of [-1, 0, 1]) {
+        for (let dy of [-1, 0, 1]) {
           if (rule.limitedBoundary) {
-            if ((x == 0 && i == -1) || (x == columns - 1 && i == 1) || (y == 0 && j == -1) || (y == rows - 1 && j == 1)) {
+            if ((x == 0 && dx == -1) || (x == columns - 1 && dx == 1) || (y == 0 && dy == -1) || (y == rows - 1 && dy == 1)) {
               continue;
             }
           }
-          if (i === 0 && j === 0) {
+          if (dx === 0 && dy === 0) {
             // the cell itself is not its own neighbor
             continue;
           }
           // The modulo operator is crucial for wrapping on the edge
-          neighbors += currentBoard[(x + i + columns) % columns][(y + j + rows) % rows].filled;
+          neighbors += currentBoard[(x + dx + columns) % columns][(y + dy + rows) % rows].filled;
         }
       }
       let { birthStart, birthEnd, survivalStart, survivalEnd } = rule
@@ -215,14 +215,14 @@ function setManualModeTrue() {
   manualBtn.disabled = true
   manualMode = true
   manualBtn.innerText = "Manual Mode: True"
-  noLoop()
+  stopGame()
 }
 
 function setManualModeFalse() {
   manualBtn.disabled = true
   manualMode = false
   manualBtn.innerText = "Manual Mode: False"
-  loop()
+  startGame()
 }
 
 function generateB3S012345678() {
@@ -234,12 +234,12 @@ function generateB3S012345678() {
   for (let x = 0; x < columns; x++) {
     for (let y = 0; y < rows; y++) {
       let neighbors = 0;
-      for (let i of [-1, 0, 1]) {
-        for (let j of [-1, 0, 1]) {
-          if (i === 0 && j === 0) {
+      for (let dx of [-1, 0, 1]) {
+        for (let dy of [-1, 0, 1]) {
+          if (dx === 0 && dy === 0) {
             continue;
           }
-          neighbors += currentBoard[(x + i + columns) % columns][(y + j + rows) % rows].filled;
+          neighbors += currentBoard[(x + dx + columns) % columns][(y + dy + rows) % rows].filled;
         }
       }
 
@@ -424,31 +424,40 @@ function manualFill() {
 }
 
 function mouseDragged() {
+  if (mouseX > unitLength * columns || mouseY > unitLength * rows) {
+    return;
+  }
   if (generateMode != "generateSlither" && controlMode.method == "mouse") {
     manualFill()
   }
 }
 
 function mousePressed() {
+  if (mouseX > unitLength * columns || mouseY > unitLength * rows) {
+    return;
+  }
   if (generateMode != "generateSlither" && controlMode.method == "mouse") {
     manualFill()
-    noLoop()
+    stopGame()
   }
 }
 
 function mouseReleased() {
+  if (mouseX > unitLength * columns || mouseY > unitLength * rows) {
+    return;
+  }
   if (rule.initialRandomState) {
     rule.initialRandomState = false
     init()
   }
   if (manualMode == false && generateMode != "generateSlither" && controlMode.method == "mouse") {
-    loop();
+    startGame()
   }
 }
 
 function keyReleased() {
   if (manualMode == false && generateMode != "generateSlither" && controlMode.method == "keyboard") {
-    loop();
+    startGame()
   }
 }
 
@@ -582,31 +591,20 @@ document.querySelector('#reset-game')
     init();
   });
 
-startBtn
-  .addEventListener('click', function () {
-    loop();
-    startBtn.disabled = true
-    stopBtn.disabled = false
-  });
+startBtn.addEventListener('click', startGame);
 
-stopBtn
-  .addEventListener('click', function () {
-    noLoop();
-    stopBtn.disabled = true
-    startBtn.disabled = false
-  });
+stopBtn.addEventListener('click', stopGame);
 
 manualBtn
   .addEventListener('click', function (e) {
     if (manualMode === true) {
       manualMode = false
       e.target.innerText = "Manual Mode: False"
-      loop()
+      startGame()
     } else {
       manualMode = true
       e.target.innerText = "Manual Mode: True"
-      startBtn.disabled = false
-      noLoop()
+      stopGame()
     }
   });
 
@@ -715,4 +713,15 @@ function keyPressed() {
     }
   }
   return false
+}
+
+function startGame(){
+  startBtn.disabled = true
+  stopBtn.disabled = false
+  loop()
+}
+function stopGame(){
+  stopBtn.disabled = true
+  startBtn.disabled = false
+  noLoop()
 }
